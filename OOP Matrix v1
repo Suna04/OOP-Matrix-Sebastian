@@ -1,0 +1,113 @@
+//Koordinate.h
+// Created by Maximilian Timonin on 14.01.26.
+//
+
+#ifndef MATRIX__KOORDINATE_H
+#define MATRIX__KOORDINATE_H
+
+using namespace std;
+namespace Koordinate{
+
+class Koordinate {
+    int x;
+    int y;
+
+public:
+    Koordinate();
+    void setX(int x);
+    void setY(int y);
+    void ausgabe();
+};
+}
+#endif //MATRIX__KOORDINATE_H
+
+---------------------------------------
+//Matrix.h
+// Created by Maximilian Timonin on 14.01.26.
+//
+
+#ifndef MATRIX__MATRIX_H
+#define MATRIX__MATRIX_H
+#include "Koordinate.h"
+
+using namespace std;
+namespace Matrix{
+
+class Matrix {
+
+    Koordinate feld[5][5];
+
+public:
+    Matrix();
+    void printKoordinaten();
+};
+}
+#endif //MATRIX__MATRIX_H
+
+// Matrix.h beschreibt WAS für ein Objekt das ist
+-----------------------------------
+//Koodinate.cpp
+// Created by Maximilian Timonin on 14.01.26.
+//
+
+#include "../include /Koordinate.h/"
+#include <iostream>
+
+
+Koordinate::Koordinate() {
+    x = 0;
+    y = 0;
+}
+
+void Koordinate::setX(int x) {
+    this -> x = x;
+}
+
+void Koordinate::setY(int y) {
+    this -> y = y;
+}
+
+void Koordinate::ausgabe() {
+    cout << "(" << x << "I" << y << ")";
+}
+
+------------------------
+// Matrix.cpp
+// Created by Maximilian Timonin on 14.01.26.
+//
+
+#include "../include /Matrix.h"
+#include <iostream>
+
+namespace Matrix {
+
+    Matrix::Matrix() {
+        for (int x = 0; x < 5; x++) {
+            for (int y = 0; y < 5; y++ ) {
+
+            }
+        }
+    }
+
+    void Matrix::printKoordinaten() {
+        for (int x = 0; x < 5; x++) {
+            for (int y = 0; y < 5; y++ ) {
+
+            }
+        }
+    }
+}
+// Matrix.cpp beschreibt WIE es funktioniert
+
+-----------------------
+//Main.cpp
+#include "include /Matrix.h"
+
+// main.cpp benutzt die Matrix
+
+#include "include /Matrix.h"
+
+int main() {
+    Matrix.printKoordinaten();
+    return 0;
+}
