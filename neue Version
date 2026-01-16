@@ -1,0 +1,147 @@
+//Koordinate.h
+// Created by Maximilian Timonin on 14.01.26.
+//
+
+#ifndef MATRIX__KOORDINATE_H
+#define MATRIX__KOORDINATE_H
+
+using namespace std;
+
+
+class Koordinate {
+    int x;
+    int y;
+    int values;
+
+public:
+    Koordinate();
+    void setX(int x);
+    void setY(int y);
+    void setValue(int value);
+    void ausgabe(bool koordinaten);
+};
+
+#endif //MATRIX__KOORDINATE_H
+----------------------------------------
+//Matrix.h
+// Created by Maximilian Timonin on 14.01.26.
+//
+
+#ifndef MATRIX__MATRIX_H
+#define MATRIX__MATRIX_H
+#include "Koordinate.h"
+
+using namespace std;
+
+
+class Matrix {
+
+    Koordinate feld[5][5];
+
+public:
+    Matrix();
+    void printKoordinaten(bool koordinaten);
+    void setValueAt(int x, int y, int values);
+};
+
+#endif //MATRIX__MATRIX_H
+
+// Matrix.h beschreibt WAS für ein Objekt das ist
+--------------------------------------------
+//Koordinate.cpp
+// Created by Maximilian Timonin on 14.01.26.
+//
+
+#include "../include /Koordinate.h"
+#include "../include /Matrix.h"
+#include <iostream>
+
+
+Koordinate::Koordinate() {
+    this-> x = 0;
+    this-> y = 0;
+    this-> values = 0;
+}
+void Koordinate::setValue(int value) {
+    this->values = value;
+}
+
+
+void Koordinate::setX(int x) {
+     this-> x = x;
+}
+
+void Koordinate::setY(int y) {
+     this-> y = y;
+}
+
+void Koordinate::ausgabe(bool koordinaten) {
+    if (koordinaten == true){
+    cout << "(" << x << "|" << y << ")";
+    }else {
+        cout << values << " ";
+    }
+}
+// Soll beschreiben wie es funktioniert
+-------------------------------------
+//Matrix.cpp
+// Created by Maximilian Timonin on 14.01.26.
+//
+
+#include "../include /Matrix.h"
+#include <iostream>
+#include <ranges>
+
+
+// Sebastian: y und x müssen verdreht sein, im ersten feld immer y im zweiten immer x
+    Matrix::Matrix() {
+        for (int y = 0; y < 5; y++) {
+            for (int x = 0; x < 5; x++ ) {
+                feld[y][x].setY(y);
+                feld[y][x].setX(x);
+                feld[y][x].setValue(0);
+            }
+        }
+    }
+
+void Matrix::setValueAt(int x, int y, int values) {
+    feld[x][y].setValue(values);
+}
+
+
+    void Matrix::printKoordinaten(bool koordinaten) {
+        for (int y = 0; y < 5; y++) {
+            for (int x = 0; x < 5; x++ ) {
+                feld[y][x].ausgabe(koordinaten);
+                //feld[y][x].ausgabe();
+            }cout << endl;
+        }
+    }
+
+// Matrix.cpp beschreibt WIE es funktioniert
+----------------------------------------------
+//main.cpp
+#include "include /Matrix.h"
+
+// main.cpp benutzt die Matrix
+
+#include "include /Matrix.h"
+
+
+int main() {
+//Matrix *p1 = new Matrix();
+  //  p1->printKoordinaten();
+
+    Matrix m1;
+    m1.setValueAt(0, 0, 5);
+    m1.setValueAt(1, 1, 9);
+    m1.setValueAt(2, 2, 3);
+    m1.setValueAt(3, 3, 8);
+    m1.setValueAt(4, 4, 7);
+    m1.printKoordinaten(false);
+
+    //m1.printKoordinaten(true);
+
+    //Matrix.printKoordinaten();
+    return 0;
+}
