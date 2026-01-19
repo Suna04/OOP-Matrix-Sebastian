@@ -1,0 +1,231 @@
+//Koordinate.h
+// Created by Maximilian Timonin on 17.01.26.
+//
+
+#ifndef MATRIXNEU_KOORDINATE_H
+#define MATRIXNEU_KOORDINATE_H
+class Koordinate {
+    int x;
+    int y;
+    int value;
+
+public:
+    Koordinate();
+    void setX(int x);
+    void setY(int y);
+    void ausgabe(bool Koordinaten);
+    void setValue(int value);
+
+    //Schiff
+    int getX();
+    int getY();
+    int getValue();
+
+
+
+};
+#endif //MATRIXNEU_KOORDINATE_H
+---------------------
+//Matrix.h
+// Created by Maximilian Timonin on 17.01.26.
+//
+
+#ifndef MATRIXNEU_MATRIX_H
+#define MATRIXNEU_MATRIX_H
+#include "../include/Koordinate.h"
+#include "../include/Schiff.h"
+
+class Matrix {
+    Koordinate feld[5][5];
+
+public:
+Matrix();
+    void printKoordinaten(bool Koordinaten);
+    void setValueAt(int x, int y, int value);
+    void spawnSchiff(Schiff s, int value); // Schiff
+};
+#endif //MATRIXNEU_MATRIX_H
+-------------------------------
+//Schiff.h
+// Created by Maximilian Timonin on 17.01.26.
+//
+
+#ifndef MATRIXNEU_SCHIFF_H
+#define MATRIXNEU_SCHIFF_H
+#include "Koordinate.h"
+
+class Schiff {
+      Koordinate item[4];
+      int direction;
+
+public:
+      Schiff(Koordinate start, int direction);
+
+      Koordinate getItem(int Index);
+      void ausgabe();
+};
+#endif //MATRIXNEU_SCHIFF_H
+-----------------------------
+//Koordinate.cpp
+// Created by Maximilian Timonin on 17.01.26.
+//
+
+#include "../include/Koordinate.h"
+#include <iostream>
+using namespace std;
+
+Koordinate::Koordinate() {
+this-> x = 0;
+    this-> y = 0;
+    this-> value = 0;
+}
+
+void Koordinate::setX(int x) {
+    this-> x = x;
+}
+
+void Koordinate::setY(int y) {
+    this-> y = y;
+}
+
+void Koordinate::ausgabe(bool Koordinaten) {
+    if (Koordinaten == true) {
+        cout << "(" << x << "|" << y << ")";
+    }else {
+        cout << value << " ";
+    }
+}
+void Koordinate::setValue(int value) {
+    this->value = value;
+}
+
+int Koordinate::getX() {
+    return this->x;
+}
+int Koordinate::getY() {
+    return this->y;
+}
+
+int Koordinate::getValue() { // Schiff
+    return this->value;
+}
+------------------------------------
+//Matrix.cpp
+// Created by Maximilian Timonin on 17.01.26.
+//
+#include "../include/Matrix.h"
+#include "../include/Koordinate.h"
+#include <iostream>
+using namespace std;
+
+
+Matrix::Matrix() {
+    for (int y = 0; y < 5; y++) {
+        for (int x = 0; x < 5; x++) {
+            feld[y][x].setY(y);
+            feld[y][x].setX(x);
+            feld[y][x].setValue(0);
+        }
+    }
+}
+
+void Matrix::printKoordinaten(bool Koordinaten) {
+    for (int y = 0; y < 5; y++) {
+        for (int x = 0; x < 5; x++) {
+
+            if (feld[y][x].getValue() == 1) {
+                cout << "S";
+            } else {
+                cout << ".";
+            }
+        }
+        cout << endl;
+    }
+}
+
+void Matrix::setValueAt(int x, int y, int value) {
+    feld[y][x].setValue(value);
+}
+void Matrix::spawnSchiff(Schiff s, int value) {
+    for (int i = 0; i < 4; i++) {
+        Koordinate k = s.getItem(i);
+        int x = k.getX();
+        int y = k.getY();
+
+            setValueAt(x, y, 1); // 1 = Schiff (damit print S ausgibt)
+
+    }
+}
+--------------------------------
+//Schiff.cpp
+// Created by Maximilian Timonin on 17.01.26.
+//
+
+#include "../include/Schiff.h"
+#include <iostream>
+
+using namespace std;
+
+Schiff::Schiff(Koordinate start, int direction) {
+    this->direction = direction;
+
+    int dx = 0;
+    int dy = 0;
+
+    switch (direction) {
+        case 1: dx = 1; dy = 0;
+            break;
+        case 2: dx = 0; dy = -1;
+            break;
+        case -1: dx = -1; dy = 0;
+            break;
+        case -2: dx = 0; dy = 1;
+            break;
+    }
+    for (int i = 0; i < 4; i++) {
+        item[i].setX(start.getX() + i *dx);
+        item[i].setY(start.getY() + i *dy);
+    }
+}
+Koordinate Schiff::getItem(int Index) {
+    return this->item[Index];
+}
+void Schiff::ausgabe() {
+    for (int i = 0; i < 4; i++) {
+        // cout << "(" << item[i].getX() << " " << item[i].getY() << ")\n";
+    }
+}
+------------------------
+//main.cpp
+#include "include/Koordinate.h"
+#include "include/Matrix.h"
+
+int main() {
+
+    //Matrix p1;
+    //p1.printKoordinaten(true);
+
+    //Matrix M1;
+    //M1.setValueAt(1, 1, 9);
+    //M1.printKoordinaten(false);
+
+    Koordinate start;
+    start.setX(0);
+    start.setY(0);
+
+    Schiff s(start, -2); // rechts
+    Matrix m;
+
+    m.spawnSchiff(s, 9);
+    m.printKoordinaten(false);
+
+
+
+return 0;
+}
+
+
+
+
+
+
