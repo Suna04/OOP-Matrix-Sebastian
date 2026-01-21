@@ -1,0 +1,430 @@
+//Direction.h
+// Created by Sebastian Stiller on 14.01.26.
+//
+
+#include "../include/Matrix.h"
+#include <iostream>
+#include "../include/Schiff2er.h"
+#include "../include/Schiff3er.h"
+#include "../include/Schiff4er.h"
+
+using namespace std;
+
+Matrix::Matrix(int dimX, int dimY) {
+    this->dimX = dimX;
+    this->dimY = dimY;
+    this->m = new Koordinate*[dimY];
+
+    for (int i = 0; i < dimY; i++) {
+        m[i] = new Koordinate[dimX];
+        for (int j = 0; j < dimX; j++) {
+            m[i][j].setX(j);
+            m[i][j].setY(i);
+        }
+    }
+}
+
+void Matrix::ausgabe() {
+    for (int i = 0; i < dimY; i++) {
+        for (int j = 0; j < dimX; j++) {
+            m[i][j].ausgabe();
+            cout << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+
+Schiff* Matrix::schiffPlatzieren(SchiffTyp typ, Koordinate start, Direction direction) {
+    Schiff *schiff;
+
+    int signX = 0;
+    int signY = 0;
+
+    if (checkSetting(start, direction, typ)) {
+
+        switch (typ) {
+            case ZWEIER:
+                schiff = new Schiff2er;
+                break;
+            case DREIER:
+                schiff = new Schiff3er;
+                break;
+            case VIERER:
+                schiff = new Schiff4er;
+                break;
+        }
+
+        switch (direction) {
+            case UP:
+                signY = -1;
+                break;
+            case DOWN:
+                signY = 1;
+                break;
+            case RIGHT:
+                signX = 1;
+                break;
+            case LEFT:
+                signX = -1;
+                break;
+        }
+
+        for (int i = 0; i < schiff->getTyp(); i++) {
+            schiff->getKoordinaten()[i].setX(start.getX() + signX * i);
+            schiff->getKoordinaten()[i].setY(start.getY() + signY * i);
+        }
+    }
+
+    return schiff;
+}
+
+bool Matrix::checkSetting(Koordinate start, Direction direction, int size) {
+    int signX = 0;
+    int signY = 0;
+
+    switch (direction) {
+        case UP:
+            signY = -1;
+            break;
+        case DOWN:
+            signY = 1;
+            break;
+        case RIGHT:
+            signX = 1;
+            break;
+        case LEFT:
+            signX = -1;
+            break;
+    }
+
+    int endX = start.getX() + signX * size;
+    int endY = start.getY() + signY * size;
+
+    return endX >= 0 && endX < this->dimX && endY >= 0 && endY < this->dimY;
+}
+------------------------------------
+//Koordinate.h
+// Created by Sebastian Stiller on 14.01.26.
+//
+
+#ifndef MYFIRSTC__PROGRAM_KOORDINATE_H
+#define MYFIRSTC__PROGRAM_KOORDINATE_H
+
+class Koordinate {
+    int x;
+    int y;
+public:
+    Koordinate();
+    Koordinate(int x, int y);
+
+    void setX(int x);
+    void setY(int y);
+    int getX();
+    int getY();
+    void ausgabe();
+};
+
+#endif //MYFIRSTC__PROGRAM_KOORDINATE_H
+----------------------------------------------
+//Matrix.h
+// Created by Sebastian Stiller on 14.01.26.
+//
+
+#ifndef MYFIRSTC__PROGRAM_MATRIX_H
+#define MYFIRSTC__PROGRAM_MATRIX_H
+
+#include "Koordinate.h"
+#include "Schiff.h"
+#include "Direction.h"
+
+class Matrix {
+    Koordinate **m;
+    int dimX;
+    int dimY;
+
+public:
+    Matrix(int dimX, int dimY);
+    void ausgabe();
+
+    Schiff* schiffPlatzieren(SchiffTyp typ, Koordinate start, Direction direction);
+private:
+    bool checkSetting(Koordinate start, Direction direction, int size);
+};
+
+#endif //MYFIRSTC__PROGRAM_MATRIX_H
+---------------------------------------------
+//Schiff.h
+// Created by Maximilian Timonin on 19.01.26.
+//
+
+#ifndef SCHIFFEVERSENKEN_SCHIFF_H
+#define SCHIFFEVERSENKEN_SCHIFF_H
+#include "Koordinate.h"
+#include "SchiffTyp.h"
+
+class Schiff {
+protected:
+    SchiffTyp typ;
+
+    Koordinate *koordinaten;
+
+public:
+    Schiff(SchiffTyp typ);
+    SchiffTyp getTyp();
+    Koordinate* getKoordinaten();
+    void ausgabe();
+};
+
+
+#endif //SCHIFFEVERSENKEN_SCHIFF_H
+----------------------------------------
+//Schiff2er.h
+// Created by Maximilian Timonin on 20.01.26.
+//
+
+#ifndef SCHIFFEVERSENKEN_SCHIFF2ER_H
+#define SCHIFFEVERSENKEN_SCHIFF2ER_H
+#include "SchiffTyp.h"
+using namespace std;
+
+class Schiff2er : public Schiff {
+public:
+    Schiff2er() : Schiff(ZWEIER) {};
+};
+#endif //SCHIFFEVERSENKEN_SCHIFF2ER_H
+------------------------------------
+//Schiff3er.h
+// Created by Maximilian Timonin on 20.01.26.
+//
+
+#ifndef SCHIFFEVERSENKEN_SCHIFF3ER_H
+#define SCHIFFEVERSENKEN_SCHIFF3ER_H
+#include "SchiffTyp.h"
+using namespace std;
+
+class Schiff3er : public Schiff {
+public:
+    Schiff3er() : Schiff(DREIER) {};
+};
+#endif //SCHIFFEVERSENKEN_SCHIFF3ER_H
+----------------------------------------
+//Schiff4er.h
+// Created by Sebastian Stiller on 19.01.26.
+//
+
+#ifndef MYFIRSTC__PROGRAM_SCHIFF4ER_H
+#define MYFIRSTC__PROGRAM_SCHIFF4ER_H
+
+#include "Schiff.h"
+
+using namespace std;
+
+class Schiff4er : public Schiff {
+public:
+    Schiff4er() : Schiff(VIERER) {};
+};
+
+
+#endif //MYFIRSTC__PROGRAM_SCHIFF_H
+---------------------------------
+//SchiffTyp.h
+// Created by Maximilian Timonin on 20.01.26.
+//
+
+#ifndef SCHIFFEVERSENKEN_SCHIFFTYP_H
+#define SCHIFFEVERSENKEN_SCHIFFTYP_H
+enum SchiffTyp {
+    ZWEIER = 2, DREIER = 3, VIERER = 4
+};
+#endif //SCHIFFEVERSENKEN_SCHIFFTYP_H
+----------------------------------
+//Koordinate.cpp
+// Created by Sebastian Stiller on 14.01.26.
+//
+
+#include "../include/Koordinate.h"
+#include <iostream>
+
+using namespace std;
+
+Koordinate::Koordinate() {}
+
+Koordinate::Koordinate(int x, int y) {
+    this->x = x;
+    this->y = y;
+}
+
+void Koordinate::setX(int x) {
+    this->x = x;
+}
+
+void Koordinate::setY(int y) {
+    this->y = y;
+}
+
+void Koordinate::ausgabe() {
+    cout << "(" << this->x << "|" << this->y << ")";
+}
+
+int Koordinate::getX() {
+    return this->x;
+}
+
+int Koordinate::getY() {
+    return this->y;
+}
+----------------------------
+//Matrix.cpp
+// Created by Sebastian Stiller on 14.01.26.
+//
+
+#include "../include/Matrix.h"
+#include <iostream>
+#include "../include/Schiff2er.h"
+#include "../include/Schiff3er.h"
+#include "../include/Schiff4er.h"
+
+using namespace std;
+
+Matrix::Matrix(int dimX, int dimY) {
+    this->dimX = dimX;
+    this->dimY = dimY;
+    this->m = new Koordinate*[dimY];
+
+    for (int i = 0; i < dimY; i++) {
+        m[i] = new Koordinate[dimX];
+        for (int j = 0; j < dimX; j++) {
+            m[i][j].setX(j);
+            m[i][j].setY(i);
+        }
+    }
+}
+
+void Matrix::ausgabe() {
+    for (int i = 0; i < dimY; i++) {
+        for (int j = 0; j < dimX; j++) {
+            m[i][j].ausgabe();
+            cout << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+
+Schiff* Matrix::schiffPlatzieren(SchiffTyp typ, Koordinate start, Direction direction) {
+    Schiff *schiff;
+
+    int signX = 0;
+    int signY = 0;
+
+    if (checkSetting(start, direction, typ)) {
+
+        switch (typ) {
+            case ZWEIER:
+                schiff = new Schiff2er;
+                break;
+            case DREIER:
+                schiff = new Schiff3er;
+                break;
+            case VIERER:
+                schiff = new Schiff4er;
+                break;
+        }
+
+        switch (direction) {
+            case UP:
+                signY = -1;
+                break;
+            case DOWN:
+                signY = 1;
+                break;
+            case RIGHT:
+                signX = 1;
+                break;
+            case LEFT:
+                signX = -1;
+                break;
+        }
+
+        for (int i = 0; i < schiff->getTyp(); i++) {
+            schiff->getKoordinaten()[i].setX(start.getX() + signX * i);
+            schiff->getKoordinaten()[i].setY(start.getY() + signY * i);
+        }
+    }
+
+    return schiff;
+}
+
+bool Matrix::checkSetting(Koordinate start, Direction direction, int size) {
+    int signX = 0;
+    int signY = 0;
+
+    switch (direction) {
+        case UP:
+            signY = -1;
+            break;
+        case DOWN:
+            signY = 1;
+            break;
+        case RIGHT:
+            signX = 1;
+            break;
+        case LEFT:
+            signX = -1;
+            break;
+    }
+
+    int endX = start.getX() + signX * size;
+    int endY = start.getY() + signY * size;
+
+    return endX >= 0 && endX < this->dimX && endY >= 0 && endY < this->dimY;
+}
+------------------------------------
+//Schiff.cpp
+// Created by Maximilian Timonin on 19.01.26.
+//
+#include "../include/Schiff.h"
+#include <iostream>
+
+using namespace std;
+
+Schiff::Schiff(SchiffTyp typ){
+
+    this->typ = typ;
+    this->koordinaten = new Koordinate[typ];
+}
+
+void Schiff::ausgabe() {
+        for (int i = 0; i < this->typ; i++) {
+            this->koordinaten[i].ausgabe();
+            cout << endl;
+        }
+    }
+
+Koordinate* Schiff::getKoordinaten() {
+    return this->koordinaten;
+}
+SchiffTyp Schiff::getTyp() {
+    return this->typ;
+}
+---------------------------------
+//Main.cpp
+#include "include/Matrix.h"
+#include <iostream>
+
+using namespace std;
+
+int main() {
+    Matrix *m = new Matrix(5,5);
+    m->ausgabe();
+
+    Schiff *schiff4_er = m->schiffPlatzieren(DREIER, Koordinate(0,0), DOWN);
+    if (schiff4_er) {
+        schiff4_er->ausgabe();
+    } else {
+        cout << "Schiff nicht platziert";
+    }
+
+    return 0;
+}
